@@ -3,6 +3,7 @@
 #include <bitset>
 #include <vector>
 #include <string>
+#include <cstdint>
 
 class VariantChecker {
     std::vector<std::bitset<256>> prefix, suffix;

@@ -147,7 +147,7 @@ int main() {
      "like this: end[T][O][N], or like this: end[Tt][Oo][Nn]\n\n"
      "You can also specify a number of symbols at the start of address, but:\n"
      "TON address always starts with 2 characters \"UQ\", and you can\'t change that.\n"
-     "Third symbol, after \"EQ\", can only be one of A, B, C, D.\n"
+     "Third symbol, after \"UQ\", can only be one of A, B, C, D.\n"
      "Use \"start\" command similarly to \"end\" command,\n"
      "but remember, the first symbol in your command is third in the address.\n"
      "With that in mind, you can specify start of the address like this:\n\n"
