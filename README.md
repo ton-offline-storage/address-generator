@@ -11,7 +11,7 @@ Download binary for your platform from latest release and run it in terminal, fo
 ## Compile from source
 ### Windows
 
-1. Install git, for example from [here](https://gitforwindows.org/)
+1. Install git, for example from [here](https://gitforwindows.org/) or [here](https://git-scm.com/download/win)
 2. Install cmake 3.27.4, e.g from [here](https://cmake.org/files/v3.27/), [direct link to 64 bit version](https://cmake.org/files/v3.27/cmake-3.27.4-windows-x86_64.msi). During installation, choose "Add cmake to PATH"
 3. Install C++ compiler, for that install msys e.g from [here](https://github.com/msys2/msys2-installer/releases/download/2024-01-13/msys2-x86_64-20240113.exe). After installation finishes, in opened msys terminal run
    `pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain`. If you installed msys in root folder (default) add `C:\msys64\ucrt64\bin`, to windows system PATH variable. Otherwise adjust `C:\msys64\ucrt64\bin` accordingly.
