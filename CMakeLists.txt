@@ -387,7 +387,7 @@ endfunction(target_link_libraries_system)
 set(TDUTILS_MIME_TYPE OFF CACHE BOOL "Generate mime type conversion")
 
 if (WIN32)
-  link_libraries(-lcrypto -lws2_32)
+  link_libraries(-lcrypto -lcrypt32 -lws2_32)
 endif()
 
 add_subdirectory(ton/tdutils)
