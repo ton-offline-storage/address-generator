@@ -14,7 +14,7 @@ Download binary for your platform from latest release and run it in terminal, fo
 
 1. Run following commands in terminal:
    ```
-   sudo apt install git build-essential cmake pkg-config zlib1g-dev openssl libssl-dev
+   sudo apt install git build-essential pkg-config zlib1g-dev openssl libssl-dev && sudo snap install cmake
    git clone --recurse-submodules https://github.com/ton-offline-storage/address-generator.git
    cd address-generator
    mkdir build
