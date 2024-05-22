@@ -9,6 +9,22 @@ Generated address will have non-default `wallet_id` parameter, it must be saved 
 Download binary for your platform from latest release and run it in terminal, follow instructions.
 
 ## Compile from source
+
+### Linux
+
+1. Run following commands in terminal:
+   ```
+   sudo apt install git build-essential cmake pkg-config zlib1g-dev openssl libssl-dev
+   git clone --recurse-submodules https://github.com/ton-offline-storage/address-generator.git
+   cd address-generator
+   mkdir build
+   cd build
+   cmake -DCMAKE_BUILD_TYPE=Release ..
+   cmake --build .
+   ```
+2. Binary with name `generator` will appear in folder `build`
+
+
 ### Windows
 
 1. Install git, for example from [here](https://gitforwindows.org/) or [here](https://git-scm.com/download/win)
@@ -26,8 +42,3 @@ Download binary for your platform from latest release and run it in terminal, fo
    cmake --build .
    ```
 6. Binary with name `generator` will appear in folder `build`
-
-
-### Linux
-
-1. Install necessary packages `sudo apt install build-essential cmake git`
