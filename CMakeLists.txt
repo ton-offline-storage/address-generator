@@ -17,7 +17,8 @@ add_executable(generator ${ADDRESS_GENERATOR_SOURCE})
 
 set(TON_VERSION 0.5)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-#set(OPENSSL_USE_STATIC_LIBS TRUE)
+set(ZLIB_USE_STATIC_LIBS "ON")
+set(OPENSSL_USE_STATIC_LIBS "ON")
 
 # Define the two required variables before including the source code for watching a git repository.
 set(PRE_CONFIGURE_FILE "ton/git.cc.in")
@@ -384,6 +385,11 @@ function(target_link_libraries_system target)
 endfunction(target_link_libraries_system)
 
 set(TDUTILS_MIME_TYPE OFF CACHE BOOL "Generate mime type conversion")
+
+if (WIN32)
+  link_libraries(-lcrypto -lws2_32)
+endif()
+
 add_subdirectory(ton/tdutils)
 add_subdirectory(ton/memprof)
 add_subdirectory(ton/tdactor)
@@ -406,5 +412,5 @@ add_subdirectory(ton/emulator)
 add_subdirectory(ton/tonlib)
 #END tonlib
 
-target_link_libraries(generator Tonlib)
-target_link_libraries(generator ton_crypto)
+target_link_libraries(generator -static Tonlib)
+target_link_libraries(generator -static ton_crypto)
