@@ -26,3 +26,8 @@ Download binary for your platform from latest release and run it in terminal, fo
    cmake --build .
    ```
 6. Binary with name `generator` will appear in folder `build`
+
+
+### Linux
+
+1. Install necessary packages `sudo apt install build-essential cmake git`
