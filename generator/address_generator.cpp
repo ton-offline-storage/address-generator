@@ -96,9 +96,9 @@ void find_address(int cores, const AddressChecker& address_checker) {
                         stream << std::fixed << std::setprecision(4) << "Expected progress: "
                         << progress << "%  Time remaining: " << (negative ? "-" : "") << hours << "H:" << minutes << "M:" <<
                         std::fixed << std::setprecision(2) << remain_time * 1e-9  <<
-                         "S  Addresses tried: " << total_tries << "\r";
+                         "S  Addresses tried: " << total_tries << "\r" << std::flush;
                         std::cout << stream.str();
-                        std::cout.flush();
+                        //std::cout.flush();
                     }
                 }
             });
