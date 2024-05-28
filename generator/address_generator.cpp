@@ -10,6 +10,8 @@
 #include <iomanip>
 #include <cmath>
 
+const long double hour_inv = 1.0 / 3600, minute_inv = 1.0 / 60;
+
 void display_results(const std::vector<td::SecureString>& words, std::uint32_t wallet_id, const std::string& address) {
     std::cout << "Your mnemonic phrase:\n\n";
     for(int row = 0; row < 6; ++row) {
@@ -36,6 +38,36 @@ void display_results(const std::vector<td::SecureString>& words, std::uint32_t w
     }
 }
 
+void display_progress(std::uint32_t col1_length, std::uint32_t col2_length, std::uint32_t col3_length,
+                      std::int64_t nano_seconds, const AddressChecker& address_checker,
+                      const std::atomic_uint64_t& total_tries, bool carriage_return = true) {
+    std::stringstream stream, col1, col2, col3;
+    long double progress = address_checker.progress(total_tries);
+    long double remain_time = nano_seconds * (100 / progress - 1);
+    bool negative = false;
+    if(remain_time < -1e-7) {
+        negative = true;
+        remain_time = -remain_time;
+    }               
+    col1 << std::fixed << std::setprecision(4) << progress << "% ";
+    if(remain_time > 1e9 * 24.0 * 365.0 * 10.0 * 3600.0) {
+        col2 << "> 10 years ";
+    } else {
+        std::int64_t hours = std::floor(remain_time * (long double)1e-9 * hour_inv);
+        std::int64_t minutes = std::floor(remain_time * (long double)1e-9 * minute_inv);
+        minutes %= 60;
+        remain_time -= (hours * 3600 + minutes * 60) * 1000000000;
+        col2 << (negative ? "-" : "") << hours << "H:" << minutes << "M:" <<
+        std::fixed << std::setprecision(2) << remain_time * 1e-9  << "S ";
+    }
+    col3 << total_tries << " ";
+    stream << std::string(col1_length - col1.str().size(), ' ') << col1.str()
+    << std::string(col2_length - col2.str().size(), ' ') << col2.str()
+    << std::string(col3_length - col3.str().size(), ' ') << col3.str()
+    << (carriage_return ? "\r" : "\n") << std::flush;
+    std::cout << stream.str();
+}
+
 void find_address(int cores, const AddressChecker& address_checker) {
     std::vector<std::string> result_address(cores);
     std::vector<std::uint32_t> result_id(cores);
@@ -52,16 +84,19 @@ void find_address(int cores, const AddressChecker& address_checker) {
     "Address may be found before, or after reaching 100% progress\n"
     "Feel free to abort the search - mathematics works so that you won't lose progress,\n"
     "however estimated time will always be same in the beginning\n";
+    std::string col1_name = "Expected progress:", col2_name = "    Time remaining:", col3_name = "    Addresses tried:";
+    std::uint32_t col1_length = col1_name.size(), col2_length = col2_name.size(), col3_length = col3_name.size();
     while(!found) {
         std::vector<std::thread> threads;
         tonlib::Mnemonic mnemonic = tonlib::Mnemonic::create_new().move_as_ok();
         mnemonic_words = mnemonic.get_words();
+        std::cout << col1_name << col2_name << col3_name << '\n';
         td::SecureString publicKey = mnemonic.to_private_key().get_public_key().move_as_ok().as_octet_string();
         auto start = std::chrono::high_resolution_clock::now();
         for (uint64_t core = 0; core < cores; ++core) {
             threads.emplace_back([total_time, start, core, cores, &found, &publicKey, &result_address, 
-                                 &result_id, &has_found, address_checker, &total_tries] {
-                const long double hour_inv = 1.0 / 3600, minute_inv = 1.0 / 60;
+                                 &result_id, &has_found, address_checker, &total_tries,
+                                 col1_length, col2_length, col3_length] {
                 InitStateCell init_state = InitStateCell(publicKey);
                 std::uint64_t local_tries = 0;
                 for(std::uint64_t i = core; i <= max_wallet_id && !found; i += cores, ++local_tries) {
@@ -78,29 +113,14 @@ void find_address(int cores, const AddressChecker& address_checker) {
                         local_tries = 0;
                     }
                     if(((i + 1) & PROGRESS_UPDATE_RATE) == 0) {
-                        std::stringstream stream;
                         auto stop = std::chrono::high_resolution_clock::now();
-                        std::int64_t nano_seconds = total_time + std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
-                        long double progress = address_checker.progress(total_tries);
-                        long double remain_time = nano_seconds * (100 / progress - 1);
-                        bool negative = false;
-                        if(remain_time < -1e-7) {
-                            negative = true;
-                            remain_time = -remain_time;
-                        }
-                        std::int64_t hours = std::floor(remain_time * (long double)1e-9 * hour_inv);
-                        std::int64_t minutes = std::floor(remain_time * (long double)1e-9 * minute_inv);
-                        minutes %= 60;
-                        remain_time -= (hours * 3600 + minutes * 60) * 1000000000;
-
-                        stream << std::fixed << std::setprecision(4) << "Expected progress: "
-                        << progress << "%  Time remaining: " << (negative ? "-" : "") << hours << "H:" << minutes << "M:" <<
-                        std::fixed << std::setprecision(2) << remain_time * 1e-9  <<
-                         "S  Addresses tried: " << total_tries << "\r" << std::flush;
-                        std::cout << stream.str();
-                        //std::cout.flush();
+                        display_progress(col1_length, col2_length, col3_length,
+                        total_time + std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count(),
+                        address_checker, total_tries);
                     }
                 }
+                total_tries += local_tries;
+                local_tries = 0;
             });
         }
         for (auto& t : threads) {
@@ -108,6 +128,8 @@ void find_address(int cores, const AddressChecker& address_checker) {
         }
         auto stop = std::chrono::high_resolution_clock::now();
         total_time += std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
+        display_progress(col1_length, col2_length, col3_length,
+        total_time, address_checker, total_tries, false);
     }
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - global_start);
@@ -134,7 +156,6 @@ AddressChecker get_address_checker() {
     }
     return result;
 }
-#include "common/util.h"
 
 int main() {
     const int cores = std::thread::hardware_concurrency();
