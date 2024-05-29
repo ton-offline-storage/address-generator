@@ -8,6 +8,16 @@ Generated address will have non-default `wallet_id` parameter, it must be saved 
 ## Usage
 Download binary for your platform from latest release and run it in terminal, follow instructions.
 
+## Perfomance
+Table shows average time for finding an address, depending on CPU and number of characters constrained (to a single option).
+
+|       | AMD Ryzen 5 3600(6C, 12T) | Intel Core i5-8350U(4C, 8T) |
+| ----- | ------------------------- | --------------------------- |
+| 4 characters |    < 1 second      |          3 seconds          |
+| 5 characters |       26 seconds   |        4 min 20 sec         |
+| 6 characters |      30 minutes    |        4 hours 40 min       |
+| 7 characters |    31 hour 30 min  |        300 hours            |
+
 ## Compile from source
 
 ### Linux
