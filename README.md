@@ -1,5 +1,5 @@
 # Address Generator
-This is command line utility, which finds mnemonic and `wallet_id`, corresponding to an address, matching specific constraints.
+This is command line utility, which finds mnemonic and `wallet_id`, corresponding to an address of Wallet V3 R2, matching specific constraints.
 Beginning and end of the address may be constrained
 
 ## ATTENTION
@@ -17,6 +17,47 @@ Table shows average time for finding an address, depending on CPU and number of 
 | 5 characters |       26 seconds   |        4 min 20 sec         |
 | 6 characters |      30 minutes    |        4 hours 40 min       |
 | 7 characters |    31 hour 30 min  |        300 hours            |
+
+## Constraints description
+*This is a copy of description, displayed when running the generator*
+
+### TLDR
+Simple examples of constraint commands
+
+`end[T][O][N]`, example result `UQCF1NqCCBCUaDsmm1fC51wMpV0vwt3loKf997ArRtNxmTON`
+
+`start[*][T][O][N]`, example result `UQBTONmtYBErhtwdQqQQjUkracKxLkU6Kb7qJr3awhoWqLGJ`
+
+### Full description
+You can specify a number of consecutive symbols at the end of address.
+For every symbol constraint looks like `[...]`, and inside brackets are
+the characters you allow symbol at this position to be, or `*` if you allow any character.
+Remember, that TON address consists only of characters from `A-Z`, `a-z`, `0-9` and `_` and `-`
+
+To constrain end of the address, use `end` command with list of constraints for symbols,
+like this: 
+
+`end[T][O][N]`, or like this: `end[Tt][Oo][Nn]`
+
+You can also specify a number of symbols at the start of address, but
+TON address always starts with 2 characters `UQ`, and you can't change that.
+Third symbol, after `UQ`, can only be one of `A`, `B`, `C`, `D`.
+
+Use `start` command similarly to `end` command,
+but remember, the first symbol in your command is third in the address.
+With that in mind, you can specify start of the address like this:
+
+`start[A][P][P][L][E]`, or like this: `start[*][T][O][N]`
+
+You can also specify both start and end at the same time, like this:
+
+`start[*][T][O][N] & end[T][O][N]`
+
+You can also add several variants of constraints, such that any
+of this constraints, if matched, satisfies you, like this:
+
+`start[*][T][O][N] & end[T][O][N] | start[D][D][D] | end[0][0][0]`
+
 
 ## Compile from source
 
