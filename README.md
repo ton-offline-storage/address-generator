@@ -13,7 +13,7 @@ Alternative is to use [TON binaries](https://docs.ton.org/develop/smart-contract
 similar to guide described [here](https://github.com/ton-defi-org/ton-offline-transaction)
 
 ## Usage
-Download binary for your platform from latest release and run it in terminal, follow instructions.
+Download binary for your platform from latest [release](https://github.com/ton-offline-storage/address-generator/releases) and run it in terminal, follow instructions.
 
 ## Perfomance
 Table shows average time for finding an address, depending on CPU and number of characters constrained (to a single option).
