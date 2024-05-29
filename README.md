@@ -3,7 +3,14 @@ This is command line utility, which finds mnemonic and `wallet_id`, correspondin
 Beginning and end of the address may be constrained
 
 ## ATTENTION
-Generated address will have non-default `wallet_id` parameter, it must be saved along with mnemonic. Thus, there are a limited list of wallets, where this address may be imported to.
+Generated address will have non-default `wallet_id` parameter, it must be saved along with mnemonic.
+Unfortunately, there are no established wallets, supporting non-standard `wallet_id`.
+
+You can import generated mnemonic and `wallet_id` to [Ton Air Gap wallet](https://github.com/ton-offline-storage/)
+(It is not mandatory to use this wallet in offline setting)
+
+Alternative is to use [TON binaries](https://docs.ton.org/develop/smart-contracts/environment/installation),
+similar to guide described [here](https://github.com/ton-defi-org/ton-offline-transaction)
 
 ## Usage
 Download binary for your platform from latest release and run it in terminal, follow instructions.
