@@ -10,7 +10,7 @@
 #include <iomanip>
 #include <cmath>
 
-const long double hour_inv = 1.0 / 3600, minute_inv = 1.0 / 60;
+const long double hour_inv = 1.0L / 3600, minute_inv = 1.0L / 60;
 
 void display_results(const std::vector<td::SecureString>& words, std::uint32_t wallet_id, const std::string& address) {
     std::cout << "Your mnemonic phrase:\n\n";
@@ -43,24 +43,31 @@ void display_progress(std::uint32_t col1_length, std::uint32_t col2_length, std:
                       const std::atomic_uint64_t& total_tries, bool carriage_return = true) {
     std::stringstream stream, col1, col2, col3;
     long double progress = address_checker.progress(total_tries);
-    long double remain_time = nano_seconds * (100 / progress - 1);
+    long double remain_time = nano_seconds * (100L / progress - 1);
     bool negative = false;
-    if(remain_time < -1e-7) {
+    if(remain_time < -1e-7L) {
         negative = true;
         remain_time = -remain_time;
     }               
     col1 << std::fixed << std::setprecision(4) << progress << "% ";
-    if(remain_time > 1e9 * 24.0 * 365.0 * 10.0 * 3600.0) {
+    if(remain_time > 1e9L * 24.0 * 365.0 * 10.0 * 3600.0) {
         col2 << "> 10 years ";
     } else {
-        std::int64_t hours = std::floor(remain_time * (long double)1e-9 * hour_inv);
-        std::int64_t minutes = std::floor(remain_time * (long double)1e-9 * minute_inv);
+        std::int64_t hours = std::floor(remain_time * 1e-9L * hour_inv);
+        std::int64_t minutes = std::floor(remain_time * 1e-9L * minute_inv);
         minutes %= 60;
         remain_time -= (hours * 3600 + minutes * 60) * 1000000000;
         col2 << (negative ? "-" : "") << hours << "H:" << minutes << "M:" <<
-        std::fixed << std::setprecision(2) << remain_time * 1e-9  << "S ";
+        std::fixed << std::setprecision(2) << remain_time * 1e-9L  << "S ";
     }
-    col3 << total_tries << " ";
+    long double speed = ((long double)total_tries) / ((long double)nano_seconds * 1e-9L);
+    if(speed < 1e6L) {
+        col3 << std::fixed << std::setprecision(2) << speed * 1e-3L << " thousand/s ";
+    } else if(speed < 1e9L) {
+        col3 << std::fixed << std::setprecision(2) << speed * 1e-6L << " million/s ";
+    } else {
+        col3 << std::fixed << std::setprecision(2) << speed * 1e-9L << " billion/s ";
+    }
     stream << std::string(col1_length - col1.str().size(), ' ') << col1.str()
     << std::string(col2_length - col2.str().size(), ' ') << col2.str()
     << std::string(col3_length - col3.str().size(), ' ') << col3.str()
@@ -77,14 +84,15 @@ void find_address(int cores, const AddressChecker& address_checker) {
     std::vector<td::SecureString> mnemonic_words;
     std::uint64_t total_time = 0;
     auto global_start = std::chrono::high_resolution_clock::now();
-    const std::uint32_t SYNC_RATE = (1 << 14) - 1;
-    const std::uint32_t PROGRESS_UPDATE_RATE = (1 << 19) - 1;
+    const std::uint32_t SYNC_RATE = (1 << 15) - 1;
+    const std::uint32_t PROGRESS_UPDATE_RATE = (1 << 21) - 1;
     const std::uint32_t max_wallet_id = std::numeric_limits<std::uint32_t>::max();
-    std::cout << "\nNote, that you may need more, or fewer tries than the excepted number.\n"
+    std::cout << "\nNote, that you may need more, or fewer tries than the expected number.\n"
     "Address may be found before, or after reaching 100% progress\n"
+    "Remaining time may show strange results at the beginning, time may increase\n"
     "Feel free to abort the search - mathematics works so that you won't lose progress,\n"
     "however estimated time will always be same in the beginning\n";
-    std::string col1_name = "Expected progress:", col2_name = "    Time remaining:", col3_name = "    Addresses tried:";
+    std::string col1_name = "Expected progress:", col2_name = "    Time remaining:", col3_name = "    Speed addresses/s:";
     std::uint32_t col1_length = col1_name.size(), col2_length = col2_name.size(), col3_length = col3_name.size();
     while(!found) {
         std::vector<std::thread> threads;
