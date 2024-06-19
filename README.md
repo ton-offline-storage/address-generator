@@ -80,8 +80,9 @@ of this constraints, if matched, satisfies you, like this:
    ```
 2. In the file `address-generator\ton\tonlib\tonlib\keys\Mnemonic.cpp` comment out line `221` using `//`.
    Line should look like this:
+   
    `//LOG(INFO) << "Mnemonic generation debug stats: " << A << " " << B << " " << C << " " << timer;`
-3. From the same directory(containing `address-generator` folder), run following commands in terminal:
+4. From the same directory(containing `address-generator` folder), run following commands in terminal:
    ```
    cd address-generator
    mkdir build
@@ -89,7 +90,7 @@ of this constraints, if matched, satisfies you, like this:
    cmake -DCMAKE_BUILD_TYPE=Release ..
    cmake --build .
    ```
-4. Binary with name `generator` will appear in folder `build`
+5. Binary with name `generator` will appear in folder `build`
 
 
 #### Windows
@@ -102,8 +103,9 @@ of this constraints, if matched, satisfies you, like this:
 5. Run `git clone --recurse-submodules https://github.com/ton-offline-storage/address-generator.git`
 6. In the file `address-generator\ton\tonlib\tonlib\keys\Mnemonic.cpp` comment out line `221` using `//`.
    Line should look like this:
+   
    `//LOG(INFO) << "Mnemonic generation debug stats: " << A << " " << B << " " << C << " " << timer;`
-7. In directory, containing `address-generator` folder, run following commands:
+8. In directory, containing `address-generator` folder, run following commands:
    ```
    cd address-generator
    mkdir build
@@ -111,4 +113,4 @@ of this constraints, if matched, satisfies you, like this:
    cmake -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles" ..
    cmake --build .
    ```
-8. Binary with name `generator` will appear in folder `build`
+9. Binary with name `generator` will appear in folder `build`
