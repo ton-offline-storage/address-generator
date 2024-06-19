@@ -6,20 +6,20 @@
 #include <cstdint>
 
 class VariantChecker {
+ public:
     std::vector<std::bitset<256>> prefix, suffix;
     const long double symbol_prob = 1.0 / 64; 
     long double prob = 1;
     friend class AddressChecker;
- public:
     VariantChecker(const std::vector<std::string>& pref_pattern, 
                 const std::vector<std::string>& suff_pattern);
     bool check(char* address) const;
 };
 
 class AddressChecker {
+ public:
     std::vector<VariantChecker> variants;
     long double prob = 0;
- public:
     void add_variant(const std::vector<std::string>& pref_pattern, 
                     const std::vector<std::string>& suff_pattern);
     void clear();

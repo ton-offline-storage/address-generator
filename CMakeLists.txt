@@ -1,24 +1,72 @@
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 
 project(Address-generator)
 
-set(ADDRESS_GENERATOR_SOURCE
-    generator/InitStateCell.h
-    generator/AddressChecker.h
-    generator/QueryParser.h
+set(CMAKE_CXX_STANDARD 17)
 
-    generator/InitStateCell.cpp
-    generator/AddressChecker.cpp
-    generator/QueryParser.cpp
-    generator/address_generator.cpp
-)
+
+if(CUDA_GENERATOR)
+  find_package(CUDA REQUIRED)
+  enable_language(CUDA)
+  include_directories("${CUDA_INCLUDE_DIRS}")
+
+  set(ADDRESS_GENERATOR_SOURCE
+    generator/utils/AddressChecker.h
+    generator/utils/AddressChecker.cpp
+    generator/utils/QueryParser.h
+    generator/utils/QueryParser.cpp
+    generator/utils/getopt.h
+    generator/utils/getopt.cpp
+    generator/utils/BufferedChannel.h
+    generator/utils/UIManager.h
+    generator/utils/UIManager.cpp
+
+    generator/cuda/utils.cuh
+    generator/cuda/sha256.cuh
+    generator/cuda/GPUInitStateCell.cuh
+    generator/cuda/FastAddressChecker.cuh
+    generator/cuda/kernel.cuh
+    generator/cuda/gpu_search.cuh
+
+    generator/gpu_generator.cu
+  )
+else()
+  set(ADDRESS_GENERATOR_SOURCE
+    generator/utils/AddressChecker.h
+    generator/utils/AddressChecker.cpp
+    generator/utils/QueryParser.h
+    generator/utils/QueryParser.cpp
+    generator/utils/InitStateCell.h
+    generator/utils/InitStateCell.cpp
+    generator/utils/UIManager.h
+    generator/utils/UIManager.cpp
+    
+    generator/cpu_generator.cpp
+  )
+endif()
+
 
 add_executable(generator ${ADDRESS_GENERATOR_SOURCE})
+
+if(CUDA_GENERATOR)
+  target_link_libraries(generator ${CUDA_LIBRARIES})
+endif()
+
+if (MSVC)
+  add_compile_options(/bigobj)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
+  if(CUDA_GENERATOR)
+    target_compile_options(generator PRIVATE -Xcompiler "/MT")
+  else()
+    target_compile_options(generator PRIVATE /MT)
+  endif()
+endif()
 
 set(TON_VERSION 0.5)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(ZLIB_USE_STATIC_LIBS "ON")
 set(OPENSSL_USE_STATIC_LIBS "ON")
+
 
 # Define the two required variables before including the source code for watching a git repository.
 set(PRE_CONFIGURE_FILE "ton/git.cc.in")
@@ -387,7 +435,11 @@ endfunction(target_link_libraries_system)
 set(TDUTILS_MIME_TYPE OFF CACHE BOOL "Generate mime type conversion")
 
 if (WIN32)
-  link_libraries(-lcrypto -lcrypt32 -lws2_32)
+  if(MSVC)
+    link_libraries(crypt32 ws2_32)
+  else()
+    link_libraries(-lcrypto -lcrypt32 -lws2_32)
+  endif()
 endif()
 
 add_subdirectory(ton/tdutils)
@@ -414,3 +466,4 @@ add_subdirectory(ton/tonlib)
 
 target_link_libraries(generator -static Tonlib)
 target_link_libraries(generator -static ton_crypto)
+
