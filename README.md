@@ -138,6 +138,28 @@ of this constraints, if matched, satisfies you, like this:
 
 ### GPU Generator
 
+#### Linux
+
+1. Run following commands in terminal:
+   ```
+   sudo apt install git build-essential pkg-config zlib1g-dev openssl libssl-dev && sudo snap install cmake --classic
+   git clone --recurse-submodules https://github.com/ton-offline-storage/address-generator.git
+   ```
+2. In the file `address-generator\ton\tonlib\tonlib\keys\Mnemonic.cpp` comment out line `221` (this line is 6-th from the end) using `//`.
+   Line should look like this:
+   
+   `//LOG(INFO) << "Mnemonic generation debug stats: " << A << " " << B << " " << C << " " << timer;`
+3. From the same directory(containing `address-generator` folder), run following commands in terminal:
+   ```
+   cd address-generator
+   mkdir build
+   cd build
+   cmake -DCMAKE_BUILD_TYPE=Release -DCUDA_GENERATOR=TRUE ..
+   cmake --build .
+   ```
+4. Binary with name `generator` will appear in folder `build`
+
+
 #### Windows
 
 1. Install git, for example from [here](https://gitforwindows.org/) or [here](https://git-scm.com/download/win)
