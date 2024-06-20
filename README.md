@@ -103,7 +103,7 @@ of this constraints, if matched, satisfies you, like this:
    Line should look like this:
    
    `//LOG(INFO) << "Mnemonic generation debug stats: " << A << " " << B << " " << C << " " << timer;`
-4. From the same directory(containing `address-generator` folder), run following commands in terminal:
+3. From the same directory(containing `address-generator` folder), run following commands in terminal:
    ```
    cd address-generator
    mkdir build
@@ -111,7 +111,7 @@ of this constraints, if matched, satisfies you, like this:
    cmake -DCMAKE_BUILD_TYPE=Release ..
    cmake --build .
    ```
-5. Binary with name `generator` will appear in folder `build`
+4. Binary with name `generator` will appear in folder `build`
 
 
 #### Windows
@@ -126,7 +126,7 @@ of this constraints, if matched, satisfies you, like this:
    Line should look like this:
    
    `//LOG(INFO) << "Mnemonic generation debug stats: " << A << " " << B << " " << C << " " << timer;`
-8. In directory, containing `address-generator` folder, run following commands:
+7. In directory, containing `address-generator` folder, run following commands:
    ```
    cd address-generator
    mkdir build
@@ -134,7 +134,7 @@ of this constraints, if matched, satisfies you, like this:
    cmake -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles" ..
    cmake --build .
    ```
-9. Binary with name `generator` will appear in folder `build`
+8. Binary with name `generator` will appear in folder `build`
 
 ### GPU Generator
 
@@ -153,41 +153,35 @@ of this constraints, if matched, satisfies you, like this:
    `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.5\extras\visual_studio_integration\MSBuildExtensions`
    to
    `C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\BuildCustomizations`
-7. Install `zlib` from [here](https://gnuwin32.sourceforge.net/downlinks/zlib.php), and add `C:\Program Files (x86)\GnuWin32\bin` to system `PATH` variable
-8. In file `C:\Program Files (x86)\GnuWin32\include\zconf.h` find following code:
-   ```
-   #if 1           /* HAVE_UNISTD_H -- this line is updated by ./configure */
-   #  include <sys/types.h> /* for off_t */
-   #  include <unistd.h>    /* for SEEK_* and off_t */
-   #  ifdef VMS
-   #    include <unixio.h>   /* for off_t */
-   #  endif
-   #  define z_off_t off_t
-   #endif
-   ```
-   Change first line to `#if 0           /* HAVE_UNISTD_H -- this line is updated by ./configure */` (You may need to change file permissions in file properties)
-9. Install `pkg-config`, download following
-   
-   - `pkg-config_0.26-1_win32.zip` from [here](http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies), extract and move `bin/pkg-config.exe` to `C:\Program Files (x86)\GnuWin32\bin`
-   - `gettext-runtime_0.18.1.1-2_win32.zip` from [here](http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies), extract and move `bin/intl.dll` to `C:\Program Files (x86)\GnuWin32\bin`
-   - `glib_2.28.8-1_win32.zip` from [here](https://download.gnome.org/binaries/win32/glib/2.28/),  extract and move `bin/libglib-2.0-0.dll` to `C:\Program Files (x86)\GnuWin32\bin`
- 
-10. Somehow install OpenSSL for windows, for example from [here](https://slproweb.com/products/Win32OpenSSL.html)
-11. If you installed OpenSSL from above link, add `C:\Program Files\OpenSSL-Win64\bin` to system `PATH` variable, and copy all files from `C:\Program Files\OpenSSL-Win64\lib\VC\x64\MT` to
+7. Somehow install OpenSSL for windows, for example from [here](https://slproweb.com/products/Win32OpenSSL.html)
+8. If you installed OpenSSL from above link, add `C:\Program Files\OpenSSL-Win64\bin` to system `PATH` variable, and copy all files from `C:\Program Files\OpenSSL-Win64\lib\VC\x64\MT` to
     `C:\Program Files\OpenSSL-Win64\lib`
+9. Install msys e.g from [here](https://www.msys2.org/). After installation finishes, in opened msys terminal run
+   `pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain`
+10.  - Copy `zlib1.dll` from `C:\msys64\ucrt64\bin` to `C:\Program Files\OpenSSL-Win64\bin`
+     - Copy `zconf.h` and `zlib.h` from `C:\msys64\ucrt64\include` to `C:\Program Files\OpenSSL-Win64\include`
+     - Copy `libz.a` and `libz.dll.a` from `C:\msys64\ucrt64\lib` to `C:\Program Files\OpenSSL-Win64\lib`
+     - Copy `pkg-config.exe` and `libpkgconf-5.dll` from `C:\msys64\ucrt64\bin` to `C:\Program Files\OpenSSL-Win64\bin`
+11. In file `C:\Program Files\OpenSSL-Win64\include\zconf.h` find following code:
+    ```
+    #if 1    /* was set to #if 1 by ./configure */
+    #  define Z_HAVE_UNISTD_H
+    #endif
+    ```
+    Change first line to `#if 0    /* was set to #if 1 by ./configure */` (You may need to change file permissions in file properties)
 12. Open windows command line, move to the directory, where you want to compile code
 13. Run `git clone --recurse-submodules https://github.com/ton-offline-storage/address-generator.git`
 14. In the file `address-generator\ton\tonlib\tonlib\keys\Mnemonic.cpp` comment out line `221` (this line is 6-th from the end) using `//`.
-   Line should look like this:
+    Line should look like this:
    
-   `//LOG(INFO) << "Mnemonic generation debug stats: " << A << " " << B << " " << C << " " << timer;`
+    `//LOG(INFO) << "Mnemonic generation debug stats: " << A << " " << B << " " << C << " " << timer;`
    
 15. From the same directory(containing `address-generator` folder), run following commands in terminal:
-   ```
-   cd address-generator
-   mkdir build
-   cd build
-   cmake -DCMAKE_BUILD_TYPE=Release -DCUDA_GENERATOR=TRUE ..
-   cmake --build .
-   ```
+    ```
+    cd address-generator
+    mkdir build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=Release -DCUDA_GENERATOR=TRUE ..
+    cmake --build .
+    ```
 16. Binary with name `generator` will appear in folder `build\Debug`
