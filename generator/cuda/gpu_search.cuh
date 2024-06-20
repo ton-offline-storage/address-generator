@@ -142,5 +142,6 @@ void gpu_find_address(const AddressChecker& cpu_checker, int64_t T_BLOCKS, int64
     std::cout << std::endl << std::endl << "Searching took: " << duration.count() << " seconds\n";
     std::cout << "Speed " << total_tries / (duration.count() + (duration.count() == 0)) << " addr/sec\n\n";
     UIManager::display_results(result_mnemonic_words, result_id, result_address);
+    cudaDeviceSynchronize();
     cudaDeviceReset();
 }

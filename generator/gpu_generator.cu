@@ -4,8 +4,30 @@
 
 #include <iostream>
 
+bool check_cuda() {
+    int version;
+    cudaError_t err = cudaDriverGetVersion(&version);
+    if (err != cudaSuccess) {
+        std::cout << "Cannot get CUDA driver version, maybe NVIDIA driver is not installed\n" << std::endl;
+        return false;
+    }
+    int GPU_N;
+    err = cudaGetDeviceCount(&GPU_N);
+    if (err != cudaSuccess) {
+        std::cout << "Cannot get CUDA devices, maybe NVIDIA driver is not installed\n" << std::endl;
+        return false;
+    }
+    if(GPU_N <= 0) {
+        std::cout << "No CUDA capable devices detected, maybe NVIDIA driver is not installed\n" << std::endl;
+        return false;
+    }
+    return true;
+}
 
 int main(int argc, char* const argv[]) {
+    if(!check_cuda()) {
+        return 0;
+    }
     int flag;
     int64_t BLOCKS = -1, THREADS = -1;
     bool only_benchmark = false;
