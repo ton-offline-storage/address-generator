@@ -140,11 +140,18 @@ of this constraints, if matched, satisfies you, like this:
 
 #### Linux
 
-1. Run following commands in terminal:
+1. Run following command in terminal:
    ```
    sudo apt install git build-essential pkg-config zlib1g-dev openssl libssl-dev && sudo snap install cmake --classic
-   git clone --recurse-submodules https://github.com/ton-offline-storage/address-generator.git
    ```
+2. Install CUDA from [here](https://developer.nvidia.com/cuda-downloads). Add following lines to your `.bashrc` file, located in `home` directory. You may need to change `cuda-12.5` to your CUDA version.
+   ```
+   export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
+   export LD_LIBRARY_PATH=/usr/local/cuda-12.5/lib64\
+                         ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+   ```
+   You may enable "Show hidden files" in your `home` directory, or use vim/nano/etc. to edit the file
+3. Run `git clone --recurse-submodules https://github.com/ton-offline-storage/address-generator.git`
 2. In the file `address-generator\ton\tonlib\tonlib\keys\Mnemonic.cpp` comment out line `221` (this line is 6-th from the end) using `//`.
    Line should look like this:
    
