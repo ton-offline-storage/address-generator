@@ -1,11 +1,11 @@
 #pragma once
 
 #include "kernel.cuh"
-#include "utils/AddressChecker.h"
+#include "../utils/AddressChecker.h"
 #include "tonlib/keys/Mnemonic.h"
 #include "smc-envelope/WalletV3.h"
-#include "utils/UIManager.h"
-#include "utils/BufferedChannel.h"
+#include "../utils/UIManager.h"
+#include "../utils/BufferedChannel.h"
 
 #include <iostream>
 #include <chrono>

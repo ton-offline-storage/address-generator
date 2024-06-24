@@ -2,7 +2,7 @@
 
 #include "GPUInitStateCell.cuh"
 #include "FastAddressChecker.cuh"
-#include "utils/AddressChecker.h"
+#include "../utils/AddressChecker.h"
 
 #include <cstdint>
 #include <chrono>
