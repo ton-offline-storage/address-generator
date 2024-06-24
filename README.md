@@ -18,7 +18,7 @@ similar to guide described [here](https://github.com/ton-defi-org/ton-offline-tr
 Download binary (`cpu-generator`) for your platform from latest [release](https://github.com/ton-offline-storage/address-generator/releases) and run it in terminal, follow instructions.
 
 ### GPU Generator
-Make sure you have NVIDIA GPU in your system. Optionally, update your GPU [driver](https://nvidia.com/drivers).
+Make sure you have NVIDIA GPU in your system. You may need to update your GPU [driver](https://nvidia.com/drivers). Driver `555.*` or later is required
 
 Download binary (`gpu-generator`) for your platform from latest [release](https://github.com/ton-offline-storage/address-generator/releases).
 Run it in terminal, follow insturctions. 
