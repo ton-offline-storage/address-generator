@@ -109,3 +109,11 @@ FastAddressChecker<prefix_len, suffix_len>* allocFastChecker(const AddressChecke
     cudaMemcpy(&(fast_checker->variants), &variants, sizeof(FastVariantChecker<prefix_len, suffix_len>*), cudaMemcpyHostToDevice);
     return fast_checker;
 }
+
+template<uint32_t prefix_len, uint32_t suffix_len>
+void freeFastChecker(FastAddressChecker<prefix_len, suffix_len>* fast_checker) {
+    FastVariantChecker<prefix_len, suffix_len>* variants;
+    cudaMemcpy(&variants, &(fast_checker->variants), sizeof(FastVariantChecker<prefix_len, suffix_len>*), cudaMemcpyDeviceToHost);
+    cudaFree(variants);
+    cudaFree(fast_checker);
+}

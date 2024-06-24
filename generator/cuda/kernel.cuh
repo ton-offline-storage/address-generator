@@ -53,18 +53,23 @@ void launch_kernel(const AddressChecker& cpu_checker, uint64_t* result,
     if(max_prefix == 0) {
         FastAddressChecker<0, 48>* fast_checker = allocFastChecker<0, 48>(cpu_checker);
         kernel<0, 48><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, args...);
+        freeFastChecker(fast_checker);
     } else if(max_suffix == 0) {
         FastAddressChecker<48, 0>* fast_checker = allocFastChecker<48, 0>(cpu_checker);
         kernel<48, 0><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, args...);
+        freeFastChecker(fast_checker);
     } else if(max_template <= 7) {
         FastAddressChecker<7, 7>* fast_checker = allocFastChecker<7, 7>(cpu_checker);
         kernel<7, 7><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, args...);
+        freeFastChecker(fast_checker);
     } else if(max_template <= 12) {
         FastAddressChecker<12, 12>* fast_checker = allocFastChecker<12, 12>(cpu_checker);
         kernel<12, 12><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, args...);
+        freeFastChecker(fast_checker);
     } else {
         FastAddressChecker<48, 48>* fast_checker = allocFastChecker<48, 48>(cpu_checker);
         kernel<48, 48><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, args...);
+        freeFastChecker(fast_checker);
     }
 }
 
@@ -112,6 +117,7 @@ void run_batch_kernels(const AddressChecker& cpu_checker, uint64_t* result,
             process_batch(cpu_checker, result, found, total_tries, cpu_result, result_id,
             result_address, publicKey, wallet_init_code, global_start, N, BATCH);
         }
+        freeFastChecker(fast_checker);
     } else if(max_suffix == 0) {
         FastAddressChecker<48, 0>* fast_checker = allocFastChecker<48, 0>(cpu_checker);
         for(uint64_t start_id = 0; start_id < total && !found; start_id += BATCH) {
@@ -120,6 +126,7 @@ void run_batch_kernels(const AddressChecker& cpu_checker, uint64_t* result,
             process_batch(cpu_checker, result, found, total_tries, cpu_result, result_id,
             result_address, publicKey, wallet_init_code, global_start, N, BATCH);
         }
+        freeFastChecker(fast_checker);
     } else if(max_template <= 7) {
         FastAddressChecker<7, 7>* fast_checker = allocFastChecker<7, 7>(cpu_checker);
         for(uint64_t start_id = 0; start_id < total && !found; start_id += BATCH) {
@@ -128,6 +135,7 @@ void run_batch_kernels(const AddressChecker& cpu_checker, uint64_t* result,
             process_batch(cpu_checker, result, found, total_tries, cpu_result, result_id,
             result_address, publicKey, wallet_init_code, global_start, N, BATCH);
         }
+        freeFastChecker(fast_checker);
     } else if(max_template <= 12) {
         FastAddressChecker<12, 12>* fast_checker = allocFastChecker<12, 12>(cpu_checker);
         for(uint64_t start_id = 0; start_id < total && !found; start_id += BATCH) {
@@ -136,6 +144,7 @@ void run_batch_kernels(const AddressChecker& cpu_checker, uint64_t* result,
             process_batch(cpu_checker, result, found, total_tries, cpu_result, result_id,
             result_address, publicKey, wallet_init_code, global_start, N, BATCH);
         }
+        freeFastChecker(fast_checker);
     } else {
         FastAddressChecker<48, 48>* fast_checker = allocFastChecker<48, 48>(cpu_checker);
         for(uint64_t start_id = 0; start_id < total && !found; start_id += BATCH) {
@@ -144,5 +153,6 @@ void run_batch_kernels(const AddressChecker& cpu_checker, uint64_t* result,
             process_batch(cpu_checker, result, found, total_tries, cpu_result, result_id,
             result_address, publicKey, wallet_init_code, global_start, N, BATCH);
         }
+        freeFastChecker(fast_checker);
     }
 }

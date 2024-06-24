@@ -29,8 +29,13 @@ void UIManager::display_results(const std::vector<std::string>& words, std::uint
     std::cout << address  << "\n\n";
     std::cout << "YOU MUST WRITE DOWN MNEMONIC PHRASE AND WALLET ID"  << '\n';
     std::cout << "You can copy them to wallet now\n";
+    quit();
+}
+
+void UIManager::quit(bool save_words) {
     std::cout << "Type \"quit\" and press enter to quit. ";
-    std::cout << "SAVE WORDS AND ID BEFORE QUITTING" << '\n';
+    if(save_words) std::cout << "SAVE WORDS AND ID BEFORE QUITTING";
+    std::cout << "\n";
     while(true) {
         std::string command;
         std::cin >> command;

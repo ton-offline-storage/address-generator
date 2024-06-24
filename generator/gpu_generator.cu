@@ -26,6 +26,7 @@ bool check_cuda() {
 
 int main(int argc, char* const argv[]) {
     if(!check_cuda()) {
+        UIManager::quit(false);
         return 0;
     }
     int flag;

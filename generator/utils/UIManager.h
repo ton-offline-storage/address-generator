@@ -23,4 +23,5 @@ class UIManager {
     static void progress_info();
     static void print_columns();
     static void start_info();
+    static void quit(bool save_words = true);
 };
