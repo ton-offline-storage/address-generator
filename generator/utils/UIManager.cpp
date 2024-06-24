@@ -1,6 +1,7 @@
 #include "UIManager.h"
 #include "QueryParser.h"
 
+#include <iostream>
 #include <sstream>
 #include <iomanip>
 #include <cmath>
