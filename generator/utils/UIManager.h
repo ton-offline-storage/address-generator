@@ -16,6 +16,7 @@ class UIManager {
  public:
     static void display_results(const std::vector<td::SecureString>& words, std::uint32_t wallet_id, const std::string& address);
     static void display_results(const std::vector<std::string>& words, std::uint32_t wallet_id, const std::string& address);
+    static std::string format_speed(long double speed);
     static void display_progress(std::int64_t nano_seconds, const AddressChecker& address_checker,
                       const uint64_t& total_tries, bool carriage_return = true);
     static AddressChecker get_address_checker();

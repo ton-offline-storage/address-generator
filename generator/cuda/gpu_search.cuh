@@ -139,8 +139,9 @@ void gpu_find_address(const AddressChecker& cpu_checker, int64_t T_BLOCKS, int64
     }
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - global_start);
+    long double duration_nano = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - global_start).count() * 1e-9L;
     std::cout << std::endl << std::endl << "Searching took: " << duration.count() << " seconds\n";
-    std::cout << "Speed " << total_tries / (duration.count() + (duration.count() == 0)) << " addr/sec\n\n";
+    std::cout << "Speed " << UIManager::format_speed(total_tries / (duration_nano + (duration_nano == 0))) << "\n\n";
     UIManager::display_results(result_mnemonic_words, result_id, result_address);
     cudaDeviceSynchronize();
     cudaDeviceReset();

@@ -1,7 +1,6 @@
 #include "UIManager.h"
 #include "QueryParser.h"
 
-#include <iostream>
 #include <sstream>
 #include <iomanip>
 #include <cmath>
@@ -40,6 +39,18 @@ void UIManager::display_results(const std::vector<std::string>& words, std::uint
     }
 }
 
+std::string UIManager::format_speed(long double speed) {
+    std::stringstream ss;
+    if(speed < 1e6L) {
+        ss << std::fixed << std::setprecision(2) << speed * 1e-3L << " thousand/s";
+    } else if(speed < 1e9L) {
+        ss << std::fixed << std::setprecision(2) << speed * 1e-6L << " million/s";
+    } else {
+        ss << std::fixed << std::setprecision(2) << speed * 1e-9L << " billion/s";
+    }
+    return ss.str();
+}
+
 void UIManager::display_progress(std::int64_t nano_seconds, const AddressChecker& address_checker,
                       const uint64_t& total_tries, bool carriage_return) {
     std::stringstream stream, col1, col2, col3;
@@ -69,19 +80,13 @@ void UIManager::display_progress(std::int64_t nano_seconds, const AddressChecker
         col3 << "?? ";
     } else {
         long double speed = ((long double)total_tries) / ((long double)nano_seconds * 1e-9L);
-        if(speed < 1e6L) {
-            col3 << std::fixed << std::setprecision(2) << speed * 1e-3L << " thousand/s ";
-        } else if(speed < 1e9L) {
-            col3 << std::fixed << std::setprecision(2) << speed * 1e-6L << " million/s ";
-        } else {
-            col3 << std::fixed << std::setprecision(2) << speed * 1e-9L << " billion/s ";
-        }
+        col3 << format_speed(speed) << " ";
     }
     stream << std::string(col1_length - col1.str().size(), ' ') << col1.str()
     << std::string(col2_length - col2.str().size(), ' ') << col2.str()
     << std::string(col3_length - col3.str().size(), ' ') << col3.str()
-    << (carriage_return ? "\r" : "\n") << std::flush;
-    std::cout << stream.str();
+    << (carriage_return ? "\r" : "\n");
+    std::cout << stream.str() << std::flush;
 }
 
 AddressChecker UIManager::get_address_checker() {
