@@ -9,6 +9,7 @@ if(CUDA_GENERATOR)
   find_package(CUDA REQUIRED)
   enable_language(CUDA)
   include_directories("${CUDA_INCLUDE_DIRS}")
+  set(CMAKE_CUDA_ARCHITECTURES "all")
 
   set(ADDRESS_GENERATOR_SOURCE
     generator/utils/AddressChecker.h
