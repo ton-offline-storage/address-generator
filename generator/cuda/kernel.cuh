@@ -11,7 +11,7 @@ template<uint32_t prefix_len, uint32_t suffix_len>
 __device__ void gpu_thread_search(uint64_t thread_id, 
     FastAddressChecker<prefix_len, suffix_len>* fast_checker,
     uint64_t* result, uint64_t n, uint64_t total,
-    unsigned char* gpu_public_key, unsigned char* gpu_wallet_init_code, uint64_t start_id = 0) {
+    unsigned char* gpu_public_key, unsigned char* gpu_wallet_init_code, uint64_t start_id) {
     
     result[thread_id] = 1ull << 32;
 	GPUInitStateCell cell(gpu_public_key, gpu_wallet_init_code, thread_id);
@@ -24,27 +24,22 @@ __device__ void gpu_thread_search(uint64_t thread_id,
 	}
 }
 
-template<uint32_t prefix_len, uint32_t suffix_len, typename... Args>
+template<uint32_t prefix_len, uint32_t suffix_len>
 __global__ void kernel(FastAddressChecker<prefix_len, suffix_len>* fast_checker,
-    uint64_t* result, uint64_t n, uint64_t total, Args... args) {
+    uint64_t* result, uint64_t n, uint64_t total, unsigned char* gpu_public_key, 
+    unsigned char* gpu_wallet_init_code, uint64_t start_id) {
 	
 	uint64_t thread_id = blockIdx.x * blockDim.x + threadIdx.x;
 	if (thread_id < n){
-        if constexpr(sizeof...(Args) == 0) {
-            unsigned char public_key[32] = {0}, wallet_init_code[32] = {0};
-            gpu_thread_search(thread_id, fast_checker,
-                result, n, total, public_key, wallet_init_code);
-        } else {
-            gpu_thread_search(thread_id, fast_checker, result, n, total, args...);
-        }
-		
+        gpu_thread_search(thread_id, fast_checker, result, n, total, gpu_public_key, gpu_wallet_init_code, start_id);	
 	}
 }
 
-template<typename... Args>
-void launch_kernel(const AddressChecker& cpu_checker, uint64_t* result, 
-    uint64_t total, uint64_t BLOCKS, uint64_t THREADS, Args... args) {
+cudaError_t launch_kernel(const AddressChecker& cpu_checker, uint64_t* result, 
+    uint64_t total, uint64_t BLOCKS, uint64_t THREADS, unsigned char* gpu_public_key, 
+    unsigned char* gpu_wallet_init_code, uint64_t start_id = 0) {
     uint32_t max_prefix = 0, max_suffix = 0, N = BLOCKS * THREADS;
+    cudaError_t cuda_result;
     for(const VariantChecker& var_checker : cpu_checker.variants) {
         max_prefix = max(max_prefix, (uint32_t)var_checker.prefix.size());
         max_suffix = max(max_suffix, (uint32_t)var_checker.suffix.size());
@@ -52,25 +47,31 @@ void launch_kernel(const AddressChecker& cpu_checker, uint64_t* result,
     uint32_t max_template = max(max_prefix, max_suffix);
     if(max_prefix == 0) {
         FastAddressChecker<0, 48>* fast_checker = allocFastChecker<0, 48>(cpu_checker);
-        kernel<0, 48><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, args...);
+        kernel<0, 48><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, gpu_public_key, gpu_wallet_init_code, start_id);
+        cuda_result = cudaGetLastError();
         freeFastChecker(fast_checker);
     } else if(max_suffix == 0) {
         FastAddressChecker<48, 0>* fast_checker = allocFastChecker<48, 0>(cpu_checker);
-        kernel<48, 0><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, args...);
+        kernel<48, 0><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, gpu_public_key, gpu_wallet_init_code, start_id);
+        cuda_result = cudaGetLastError();
         freeFastChecker(fast_checker);
     } else if(max_template <= 7) {
         FastAddressChecker<7, 7>* fast_checker = allocFastChecker<7, 7>(cpu_checker);
-        kernel<7, 7><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, args...);
+        kernel<7, 7><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, gpu_public_key, gpu_wallet_init_code, start_id);
+        cuda_result = cudaGetLastError();
         freeFastChecker(fast_checker);
     } else if(max_template <= 12) {
         FastAddressChecker<12, 12>* fast_checker = allocFastChecker<12, 12>(cpu_checker);
-        kernel<12, 12><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, args...);
+        kernel<12, 12><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, gpu_public_key, gpu_wallet_init_code, start_id);
+        cuda_result = cudaGetLastError();
         freeFastChecker(fast_checker);
     } else {
         FastAddressChecker<48, 48>* fast_checker = allocFastChecker<48, 48>(cpu_checker);
-        kernel<48, 48><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, args...);
+        kernel<48, 48><<<BLOCKS, THREADS>>>(fast_checker, result, N, total, gpu_public_key, gpu_wallet_init_code, start_id);
+        cuda_result = cudaGetLastError();
         freeFastChecker(fast_checker);
     }
+    return cuda_result;
 }
 
 void process_batch(const AddressChecker& cpu_checker, uint64_t* result, 

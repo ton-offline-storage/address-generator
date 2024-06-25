@@ -37,14 +37,23 @@ void benchmark(uint64_t& best_blocks, uint64_t& best_threads, int64_t T_BLOCKS, 
         if(T_BLOCKS >= 0) blocks_variants = {(uint64_t)T_BLOCKS};
 
         for(uint64_t blocks : blocks_variants) {
+            unsigned char* gpu_public_key;
+            unsigned char* gpu_wallet_init_code;
+            cudaMalloc(&gpu_public_key, 32 * sizeof(unsigned char));
+            cudaMalloc(&gpu_wallet_init_code, 32 * sizeof(unsigned char));
             uint64_t N = blocks * threads;
             uint64_t* result;
             cudaMalloc(&result, N * sizeof(uint64_t));
             auto start = std::chrono::high_resolution_clock::now();
-            launch_kernel(checker, result, address_batch, blocks, threads);
+            cudaError_t launch_result = launch_kernel(checker, result, address_batch, blocks, threads, gpu_public_key, gpu_wallet_init_code);
             cudaDeviceSynchronize();
             auto stop = std::chrono::high_resolution_clock::now();
             cudaDeviceReset();
+            if(launch_result != cudaSuccess) {
+                std::cout << "Run with BLOCKS: " << blocks << " THREADS: " << threads << " failed:\n";
+                printf("Reason: cudaError %d (%s)\n", launch_result, cudaGetErrorString(launch_result));
+                continue;
+            }
             uint64_t precise_time = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
             uint64_t cur_time = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count();
             std::cout << "Run with BLOCKS: " << blocks << " THREADS: " << threads << " time: " << cur_time << " ms\n";
