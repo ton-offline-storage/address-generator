@@ -2,6 +2,10 @@
 This is command line utility, which finds mnemonic and `wallet_id`, corresponding to an address of Wallet V3 R2, matching specific constraints.
 Beginning and end of the address may be constrained
 
+like that, `UQCF1NqCCBCUaDsmm1fC51wMpV0vwt3loKf997ArRtJ_123456`
+
+or like that `UQAPPLE4APeEfnGAbTIbXYGALf0rp9ALm5iJuFvddzg-6A0I`
+
 ## ATTENTION
 Generated address will have non-default `wallet_id` parameter, it must be saved along with mnemonic.
 Unfortunately, there are no established wallets, supporting non-standard `wallet_id`.
@@ -39,14 +43,16 @@ You can specify one parameter to benchmark another one. You can run only benchma
 By the way Tails OS is a distributive of Linux, so Linux version will go
 
 ## Perfomance
-Table shows average time for finding an address, depending on CPU and number of characters constrained (to a single option).
+Table shows average time for finding an address, depending on hardware and number of characters constrained (to a single option).
 
-|       | AMD Ryzen 5 3600(6C, 12T) | Intel Core i5-8350U(4C, 8T) |
-| ----- | ------------------------- | --------------------------- |
-| 4 characters |    < 1 second      |          3 seconds          |
-| 5 characters |       26 seconds   |        4 min 20 sec         |
-| 6 characters |      30 minutes    |        4 hours 40 min       |
-| 7 characters |    31 hour 30 min  |        300 hours            |
+Lower numbers of characters are a matter of seconds for any hardware.
+
+|                                 | 5 characters |  6 characters  |  7 characters  | 8 characters |
+| ------------------------------- | ------------ | -------------- | -------------- | ------------ |
+| **Intel Core i5-8350U(4C, 8T)** | 4 min 20 sec |   4 h 40 min   |   12,5 days    |  > 2 years   | 
+| **AMD Ryzen 5 3600(6C, 12T)**   |    26 sec    |    30 min      | 31 h 30 min    |   84 days    |
+|   **NVIDIA GTX 1650 SUPER**     |    2 sec     |     2 min      |    2 hours     |   5,5 days   |
+
 
 ## Constraints description
 *This is a copy of description, displayed when running the generator*
