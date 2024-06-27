@@ -38,7 +38,7 @@ You can specify one parameter to benchmark another one. You can run only benchma
 
 `gpu-generator -b`
 
- You can specify constraints in command line with `-q` option:
+ You can specify constraints in command line (instead of typing after launch) with `-q` option:
 
  `gpu-generator -q "start[*][T][O][N] | end[1][2][3]"`
 
