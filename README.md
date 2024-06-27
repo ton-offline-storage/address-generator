@@ -38,6 +38,10 @@ You can specify one parameter to benchmark another one. You can run only benchma
 
 `gpu-generator -b`
 
+ You can specify constraints in command line with `-q` option:
+
+ `gpu-generator -q "start[*][T][O][N] | end[1][2][3]"`
+
 #### Tips
 
 By the way Tails OS is a distributive of Linux, so Linux version will go
@@ -52,7 +56,7 @@ Lower numbers of characters are a matter of seconds for any hardware.
 | **Intel Core i5-8350U(4C, 8T)** | 4 min 20 sec |   4 h 40 min   |   12,5 days    |  > 2 years   | 
 | **AMD Ryzen 5 3600(6C, 12T)**   |    26 sec    |    30 min      | 31 h 30 min    |   84 days    |
 |   **NVIDIA GTX 1650 SUPER**     |    2 sec     |     2 min      |    2 hours     |   5,5 days   |
-
+|      **NVIDIA RTX 4090**        |    0 sec     |     13 sec     |    13,5 min    |  14,5 hours  |
 
 ## Constraints description
 *This is a copy of description, displayed when running the generator*
