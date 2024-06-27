@@ -3,6 +3,7 @@
 #include "cuda/gpu_search.cuh"
 
 #include <iostream>
+#include <string>
 
 bool check_cuda() {
     int version;
@@ -31,8 +32,9 @@ int main(int argc, char* const argv[]) {
     }
     int flag;
     int64_t BLOCKS = -1, THREADS = -1;
-    bool only_benchmark = false;
-    while ((flag = getopt(argc, argv, "bB:T:")) != -1) {
+    bool only_benchmark = false, instant_query = false;
+    std::string query;
+    while ((flag = getopt(argc, argv, "bB:T:q:")) != -1) {
         switch(flag) {
             case 'B':
                 BLOCKS = atoll(optarg);
@@ -59,6 +61,10 @@ int main(int argc, char* const argv[]) {
             case 'b':
                 only_benchmark = true;
                 break;
+            case 'q':
+                instant_query = true;
+                query = std::string(optarg);
+                break;
             default:
                 return 0;
         }
@@ -73,7 +79,16 @@ int main(int argc, char* const argv[]) {
         (1ull << 32) << "(2^32)\n";
         return 0;
     }
-    UIManager::start_info();
-    AddressChecker address_checker = UIManager::get_address_checker();
+    AddressChecker address_checker;
+    if(instant_query) {
+        if(!UIManager::init_address_checker(query, address_checker)) {
+            std::cout << "Invalid query passed as option\n";
+            UIManager::quit(false);
+            return 0;
+        }
+    } else {
+        UIManager::start_info();
+        address_checker = UIManager::get_address_checker();
+    }
     gpu_find_address(address_checker, BLOCKS, THREADS);
 }

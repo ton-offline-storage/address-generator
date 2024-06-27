@@ -109,6 +109,11 @@ AddressChecker UIManager::get_address_checker() {
     return result;
 }
 
+bool UIManager::init_address_checker(std::string& query, AddressChecker& checker) {
+    QueryParser parser;
+    return parser.parse_query(query, checker);
+}
+
 void UIManager::progress_info() {
     std::cout << "\nNote, that you may need more, or fewer tries than the expected number.\n"
     "Address may be found before, or after reaching 100% progress\n"

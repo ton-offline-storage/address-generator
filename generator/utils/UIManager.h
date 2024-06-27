@@ -20,6 +20,7 @@ class UIManager {
     static void display_progress(std::int64_t nano_seconds, const AddressChecker& address_checker,
                       const uint64_t& total_tries, bool carriage_return = true);
     static AddressChecker get_address_checker();
+    static bool init_address_checker(std::string& query, AddressChecker& checker);
     static void progress_info();
     static void print_columns();
     static void start_info();
