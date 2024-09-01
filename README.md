@@ -115,7 +115,7 @@ But it is not necessary, you can make a GPU generator running in an OS running f
 6. Boot from primary USB, don't forget to disconnect computer from internet
 7. In Puppy Linux: Menu(left-down corner) -> Setup -> Puppy Installer -> BootFlash -> Choose the primary USB stick -> Choose `Create UEFI USB` (First option) -> Choose `FAT32 partition + F2FS partition` -> confirm
 8. Now opened the window for choosing Puppy Linux ISO image. Plug in auxillary USB, copy ISO file to Puppy filesystem, and choose it in the window
-9. After installation finishes, reboot, and choose to save session. If asked, choose your primary USB stick -> normal(no encryption) -> Choose to save in a folder -> ok -> Yes, save
+9. After installation finishes, reboot, and choose to save session. If asked, choose your primary USB stick(It's second f2fs partition. Disconnect other USBs if unsure) -> normal(no encryption) -> Choose to save in a folder -> ok -> Yes, save
 10. Copy `devx_dpupbw64_10.0.7.sfs` and `kernel_sources-6.1.94-dpupbw64.sfs` from auxillary USB to Puppy filesystem. For each, click on it -> Install SFS
 11. Copy driver (`.run` file) to Puppy, run it, follow instructions. If you don't understand choices, choose first option. **HOWEVER**, when asked:
 `Would you like to run the nvidia-xconfig utitlity to automatically update your X configuration file...` choose **No**.
