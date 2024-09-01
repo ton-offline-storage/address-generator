@@ -27,7 +27,7 @@ Make sure you have NVIDIA GPU in your system. You may need to update your GPU [d
 Download binary (`gpu-generator`) for your platform from latest [release](https://github.com/ton-offline-storage/address-generator/releases).
 Run it in terminal, follow insturctions. 
 
-If you want to use GPU generator in Tails OS, you may need to take additional actions, read [further](#gpu-generator-in-offline-system)
+If you want to use GPU generator in Tails OS, you may need to take additional actions, read [below](#gpu-generator-in-offline-system)
 
 #### Run options
 
