@@ -19,13 +19,15 @@ similar to guide described [here](https://github.com/ton-defi-org/ton-offline-tr
 ## Usage
 
 ### CPU Generator
-Download binary (`cpu-generator`) for your platform from latest [release](https://github.com/ton-offline-storage/address-generator/releases) and run it in terminal, follow instructions.
+Download binary (`cpu-generator`) for your platform from latest [release](https://github.com/ton-offline-storage/address-generator/releases) and run it in terminal, follow instructions. Linux version is suitable for Tails OS.
 
 ### GPU Generator
 Make sure you have NVIDIA GPU in your system. You may need to update your GPU [driver](https://nvidia.com/drivers). Driver `555.*` or later is required
 
 Download binary (`gpu-generator`) for your platform from latest [release](https://github.com/ton-offline-storage/address-generator/releases).
 Run it in terminal, follow insturctions. 
+
+If you want to use GPU generator in Tails OS, you may need to take additional actions, read [further](#gpu-generator-in-offline-system)
 
 #### Run options
 
@@ -42,9 +44,6 @@ You can specify one parameter to benchmark another one. You can run only benchma
 
  `gpu-generator -q "start[*][T][O][N] | end[1][2][3]"`
 
-#### Tips
-
-By the way Tails OS is a distributive of Linux, so Linux version will go
 
 ## Perfomance
 Table shows average time for finding an address, depending on hardware and number of characters constrained (to a single option).
@@ -98,7 +97,31 @@ of this constraints, if matched, satisfies you, like this:
 
 `start[*][T][O][N] & end[T][O][N] | start[D][D][D] | end[0][0][0]`
 
+## GPU generator in offline system
 
+You may want to use a GPU generator on an offline computer, along with Ton Air Gap Wallet, to secure generated mnemonic words. There won't be any problems with CPU generator,
+but for the GPU one you need to install an NVIDIA driver, and it is tricky to do it in Tails OS.
+There is an option to buy not a USB stick, but a hard drive specifically for Air Gap Wallet and GPU generator, and install more common non-amnesic system like Windows/Ubuntu. Installing such OS on a USB stick is problematic because of low I/O speeds of USB sticks.
+
+But it is not necessary, you can make a GPU generator running in an OS running from USB stick, one option is to use [Puppy Linux OS](https://puppylinux-woof-ce.github.io/). Here is the guide explaining how to make the GPU generator running in offline Puppy Linux. You can use Puppy Linux only once to use Generator, and then use received mnemonic phrase in Tails OS, or use Puppy Linux instead of Tails OS. We consider Tails OS a more secure option.
+
+1. You need one USB stick to install Puppy Linux to (primary stick), and one auxillary
+2. Download Puppy Linux ISO image from official [page](https://forum.puppylinux.com/puppy-linux-collection), we recommend Bookworm 64-bit.
+ You'll get to [this page](https://rockedge.org/kernels/data/ISO/Bookworm_Pup64/). Download  `BookwormPup64_10.0.7.iso`, and two files -
+`devx_dpupbw64_10.0.7.sfs` and `kernel_sources-6.1.94-dpupbw64.sfs`, you will need them later.
+3. Copy all 3 files to auxillary USB stick, along with GPU-generator and, if you want to use offline wallet here, not in Tails OS, copy offline client also
+4. Download NVIDIA [driver](https://nvidia.com/drivers). Choose Linux 64-bit OS, download driver `555.*` or later. Copy it to auxillary USB.
+5. Flash ISO image (`BookwormPup64_10.0.7.iso`) to the primary USB stick, using, for example, [balena etcher](https://etcher.balena.io/). Open etcher and follow instructions
+6. Boot from primary USB, don't forget to disconnect computer from internet
+7. In Puppy Linux: Menu(left-down corner) -> Setup -> Puppy Installer -> BootFlash -> Choose the primary USB stick -> Choose `Create UEFI USB` (First option) -> Choose `FAT32 partition + F2FS partition` -> confirm
+8. Now opened the window for choosing Puppy Linux ISO image. Plug in auxillary USB, copy ISO file to Puppy filesystem, and choose it in the window
+9. After installation finishes, reboot, and choose to save session. If asked, choose your primary USB stick -> normal(no encryption) -> Choose to save in a folder -> ok -> Yes, save
+10. Copy `devx_dpupbw64_10.0.7.sfs` and `kernel_sources-6.1.94-dpupbw64.sfs` from auxillary USB to Puppy filesystem. For each, click on it -> Install SFS
+11. Copy driver (`.run` file) to Puppy, run it, follow instructions. If you don't understand choices, choose first option. **HOWEVER**, when asked:
+`Would you like to run the nvidia-xconfig utitlity to automatically update your X configuration file...` choose **No**.
+12. Reboot, choose to save session.
+13. Copy `gpu-generator`, and if needed, offline-client, to Puppy Linux. Now the generator will work.
+    
 ## Compile from source
 
 ### CPU Generator
