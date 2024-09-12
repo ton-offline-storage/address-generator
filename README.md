@@ -6,7 +6,7 @@ like that, `UQCF1NqCCBCUaDsmm1fC51wMpV0vwt3loKf997ArRtJ_123456`
 
 or like that `UQAPPLE4APeEfnGAbTIbXYGALf0rp9ALm5iJuFvddzg-6A0I`
 
-## ATTENTION
+## ATTENTION (Wallet ID)
 Generated address will have non-default `wallet_id` parameter, it must be saved along with mnemonic.
 Unfortunately, there are no established wallets, supporting non-standard `wallet_id`.
 
