@@ -8,12 +8,12 @@ or like that `UQAPPLE4APeEfnGAbTIbXYGALf0rp9ALm5iJuFvddzg-6A0I`
 
 ## ATTENTION (Wallet ID)
 Generated address will have non-default `wallet_id` parameter, it must be saved along with mnemonic.
-Unfortunately, there are no established wallets, supporting non-standard `wallet_id`.
+Unfortunately, not every wallet supports non-standard `wallet_id`.
 
-You can import generated mnemonic and `wallet_id` to [Ton Air Gap wallet](https://github.com/ton-offline-storage/)
+- You can import generated mnemonic and `wallet_id` to [Ton Air Gap wallet](https://github.com/ton-offline-storage/)
 (It is not mandatory to use this wallet in offline setting)
-
-Alternative is to use [TON binaries](https://docs.ton.org/develop/smart-contracts/environment/installation),
+- You can import to [TonDevWallet](https://github.com/TonDevWallet/TonDevWallet)
+- Alternative is to use [TON binaries](https://docs.ton.org/develop/smart-contracts/environment/installation),
 similar to guide described [here](https://github.com/ton-defi-org/ton-offline-transaction)
 
 ## Usage
